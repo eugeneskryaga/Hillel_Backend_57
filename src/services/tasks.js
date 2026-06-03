@@ -1,16 +1,4 @@
-import fs from "node:fs/promises";
-import path from "node:path";
-
-const DB_PATH = path.resolve("src", "db", "tasks.json");
-
-const readTasks = async () => {
-  const tasks = await fs.readFile(DB_PATH, "utf-8");
-  return JSON.parse(tasks);
-};
-
-const writeTasks = async tasks => {
-  await fs.writeFile(DB_PATH, JSON.stringify(tasks, null, 2), "utf-8");
-};
+import { readTasks, writeTasks } from "../utils/tasks.js";
 
 export const getAllTasks = async () => {
   const tasks = await readTasks();
@@ -47,7 +35,7 @@ export const addTask = async title => {
   console.log(newTask);
 };
 
-export const updateTasks = async ({ id, title, completed }) => {
+export const updateTask = async ({ id, title, completed }) => {
   if (!id) {
     throw new Error("ID is required");
   }

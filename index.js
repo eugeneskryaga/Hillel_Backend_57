@@ -6,7 +6,7 @@ import {
   getAllTasks,
   getTaskById,
   removeTask,
-  updateTasks,
+  updateTask,
 } from "./src/services/tasks.js";
 
 const argv = yargs(hideBin(process.argv))
@@ -36,7 +36,7 @@ const run = async () => {
         break;
 
       case "update":
-        await updateTasks({
+        await updateTask({
           id: argv.id,
           title: argv.title,
           completed: argv.completed,
