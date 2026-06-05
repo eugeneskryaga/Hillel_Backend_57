@@ -1,4 +1,4 @@
-import { readTasks, writeTasks } from "../services/tasks.js";
+import { readTasks, writeTasks } from "../utils/tasks.js";
 
 export const getAllTasks = async () => {
   const tasks = await readTasks();
