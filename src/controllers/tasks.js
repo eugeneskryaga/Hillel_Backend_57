@@ -1,24 +1,30 @@
 import { readTasks, writeTasks } from "../utils/tasks.js";
 
-export const getAllTasks = async () => {
+export const getTasks = async (req, res) => {
   const tasks = await readTasks();
-  return tasks;
+  res.json(tasks);
 };
 
-export const getTaskById = async id => {
+export const getTaskById = async (req, res) => {
+  const { taskId } = req.params;
   const tasks = await readTasks();
-  const task = tasks.find(task => task.id === Number(id));
+
+  const task = tasks.find(({ id }) => id === Number(taskId));
 
   if (!task) {
-    throw new Error("Task not found");
+    res.status(404).json({ message: "Task not found!" });
+    return;
   }
 
-  return task;
+  res.json(task);
 };
 
-export const addTask = async title => {
+export const addTask = async (req, res) => {
+  const { title } = req.body;
+
   if (!title) {
-    throw new Error("Title is required");
+    res.status(400).json({ message: "Title is required!" });
+    return;
   }
 
   const tasks = await readTasks();
@@ -28,55 +34,51 @@ export const addTask = async title => {
     completed: false,
   };
 
-  tasks.push(newTask);
+  const newTasks = [...tasks, newTask];
 
-  await writeTasks(tasks);
+  await writeTasks(newTasks);
 
-  return newTask;
+  res.status(201).json(newTask);
 };
 
-export const updateTask = async ({ id, title, completed }) => {
-  if (!id) {
-    throw new Error("ID is required");
-  }
+export const updateTask = async (req, res) => {
+  const { taskId } = req.params;
 
   const tasks = await readTasks();
-  const taskIndex = tasks.findIndex(task => task.id === Number(id));
 
-  if (taskIndex === -1) {
-    throw new Error("Task not found");
+  const task = tasks.find(({ id }) => id === Number(taskId));
+
+  if (!task) {
+    res.status(404).json({ message: "Task not found!" });
+    return;
   }
 
-  if (title) {
-    tasks[taskIndex].title = title;
-  }
+  const body = req.body;
 
-  if (completed !== undefined) {
-    if (typeof completed === "string") {
-      tasks[taskIndex].completed = completed === "true";
-    } else {
-      tasks[taskIndex].completed = Boolean(completed);
-    }
-  }
+  const newTask = {
+    ...task,
+    ...body,
+  };
 
-  await writeTasks(tasks);
-  return tasks[taskIndex];
+  const updatedTasks = tasks.map(task =>
+    task.id === Number(taskId) ? newTask : task,
+  );
+
+  await writeTasks(updatedTasks);
+  res.json(newTask);
 };
 
-export const removeTask = async id => {
-  if (!id) {
-    throw new Error("ID is required");
-  }
+export const removeTask = async (req, res) => {
+  const { taskId } = req.params;
 
   const tasks = await readTasks();
-  const taskExists = tasks.some(task => task.id === Number(id));
+  const filteredTasks = tasks.filter(task => task.id !== Number(taskId));
 
-  if (!taskExists) {
-    throw new Error("Task not found");
+  if (tasks.length === filteredTasks.length) {
+    res.status(404).json({ message: "Task not found!" });
+    return;
   }
-
-  const filteredTasks = tasks.filter(task => task.id !== Number(id));
 
   await writeTasks(filteredTasks);
-  return `Task with ID ${id} deleted`;
+  res.sendStatus(204);
 };
