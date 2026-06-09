@@ -9,7 +9,7 @@ const server = express();
 
 server.use(express.json());
 
-server.use(tasksRouter);
+server.use("/tasks", tasksRouter);
 
 server.use(notFoundHandler);
 server.use(errorHandler);
