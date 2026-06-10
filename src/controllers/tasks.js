@@ -49,7 +49,7 @@ export const removeTask = async (req, res) => {
 
   const removedTask = await deleteTaskService(taskId);
 
-  if (!removeTask) {
+  if (!removedTask) {
     throw createHttpError(404, "Task not found!");
   }
 
