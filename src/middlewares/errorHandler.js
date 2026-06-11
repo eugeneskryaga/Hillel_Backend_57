@@ -1,10 +1,15 @@
+import HttpError from "http-errors";
+
 export const errorHandler = (err, req, res, next) => {
-  const defaultMessage =
+  if (err instanceof HttpError) {
+    res.status(err.status).json({ message: err.message });
+    return;
+  }
+
+  const message =
     process.env.NODE_ENV === "production"
       ? "Something went wrong"
       : err.message;
 
-  const { status = 500, message = defaultMessage } = err;
-
-  res.status(status).json({ message });
+  res.status(500).json({ message });
 };
