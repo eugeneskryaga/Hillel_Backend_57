@@ -35,13 +35,13 @@ export const updateTask = async (req, res) => {
   const { taskId } = req.params;
   const body = req.body;
 
-  const updatedTask = await updateTaskService(taskId, body);
+  const result = await updateTaskService(taskId, body);
 
-  if (!updatedTask) {
+  if (!result) {
     throw createHttpError(404, "Task not found!");
   }
 
-  res.json(updatedTask);
+  res.json(result.data);
 };
 
 export const removeTask = async (req, res) => {
@@ -54,4 +54,15 @@ export const removeTask = async (req, res) => {
   }
 
   res.sendStatus(204);
+};
+
+export const updateOrCreate = async (req, res) => {
+  const { id } = req.params;
+  const body = req.body;
+
+  const { data, isUpdated } = await updateTaskService(id, body, {
+    upsert: true,
+  });
+
+  res.status(isUpdated ? 200 : 201).json(data);
 };

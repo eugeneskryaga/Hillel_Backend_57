@@ -8,7 +8,19 @@ export const addTaskService = task => Task.create(task);
 
 export const deleteTaskService = id => Task.findByIdAndDelete(id);
 
-export const updateTaskService = (id, task) =>
-  Task.findByIdAndUpdate(id, task, {
+export const updateTaskService = async (id, task, options) => {
+  const result = await Task.findByIdAndUpdate(id, task, {
     returnDocument: "after",
+    includeResultMetadata: true,
+    ...options,
   });
+
+  if (!result.value) {
+    return null;
+  }
+
+  return {
+    data: result.value,
+    isUpdated: result.lastErrorObject.updatedExisting,
+  };
+};
