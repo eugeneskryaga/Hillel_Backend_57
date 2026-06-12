@@ -7,14 +7,25 @@ import {
   updateOrCreate,
   updateTask,
 } from "../controllers/tasks.js";
+import { celebrate } from "celebrate";
+import {
+  createTaskSchema,
+  idSchema,
+  updateTaskSchema,
+} from "../validation/task.js";
 
 const router = Router();
 
 router.get("/", getTasks);
-router.get("/:taskId", getTaskById);
-router.delete("/:taskId", removeTask);
-router.post("/", addTask);
-router.patch("/:taskId", updateTask);
-router.put("/:id", updateOrCreate);
+router.get("/:taskId", celebrate(idSchema), getTaskById);
+router.delete("/:taskId", celebrate(idSchema), removeTask);
+router.post("/", celebrate(createTaskSchema), addTask);
+router.patch("/:taskId", celebrate(updateTaskSchema), updateTask);
+router.put(
+  "/:taskId",
+  celebrate(idSchema),
+  celebrate(createTaskSchema),
+  updateOrCreate,
+);
 
 export default router;
