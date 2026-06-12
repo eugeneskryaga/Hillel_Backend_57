@@ -15,6 +15,7 @@ export const getTasks = async (req, res) => {
 export const getTaskById = async (req, res) => {
   const { taskId } = req.params;
   const task = await getTaskByIdService(taskId);
+  console.log(task);
 
   if (!task) {
     throw createHttpError(404, "Task not found!");
