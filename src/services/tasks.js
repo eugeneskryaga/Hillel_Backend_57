@@ -1,6 +1,26 @@
 import { Task } from "../db/models/Task.js";
 
-export const getTasksService = () => Task.find();
+export const getTasksService = async ({
+  page = 1,
+  perPage = 3,
+  sortBy = "title",
+  sortOrder = "asc",
+}) => {
+  const skip = (page - 1) * perPage;
+  const tasksQuery = Task.find();
+
+  const [totalCount, tasks] = await Promise.all([
+    tasksQuery.clone().countDocuments(),
+    tasksQuery
+      .skip(skip)
+      .limit(perPage)
+      .sort({ [sortBy]: sortOrder }),
+  ]);
+
+  const totalPages = Math.ceil(totalCount / perPage);
+
+  return { tasks, totalCount, totalPages };
+};
 
 export const getTaskByIdService = id => Task.findById(id);
 

@@ -8,8 +8,9 @@ import {
 } from "../services/tasks.js";
 
 export const getTasks = async (req, res) => {
-  const tasks = await getTasksService();
-  res.json(tasks);
+  const { page, perPage, sortBy, sortOrder } = req.query;
+  const response = await getTasksService({ page, perPage, sortBy, sortOrder });
+  res.json(response);
 };
 
 export const getTaskById = async (req, res) => {
