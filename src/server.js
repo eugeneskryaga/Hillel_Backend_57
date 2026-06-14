@@ -3,6 +3,7 @@ import tasksRouter from "./routers/tasks.js";
 import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { connectDb } from "./db/connectDb.js";
+import { errors } from "celebrate";
 import "dotenv/config";
 
 const PORT = process.env.PORT;
@@ -13,6 +14,8 @@ server.use(express.json());
 server.use("/tasks", tasksRouter);
 
 server.use(notFoundHandler);
+
+server.use(errors());
 server.use(errorHandler);
 
 await connectDb();
