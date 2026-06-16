@@ -5,9 +5,14 @@ export const getTasksService = async ({
   perPage = 3,
   sortBy = "title",
   sortOrder = "asc",
+  completed,
 }) => {
   const skip = (page - 1) * perPage;
   const tasksQuery = Task.find();
+
+  if (completed !== undefined) {
+    tasksQuery.where("completed").equals(completed);
+  }
 
   const [totalCount, tasks] = await Promise.all([
     tasksQuery.clone().countDocuments(),
