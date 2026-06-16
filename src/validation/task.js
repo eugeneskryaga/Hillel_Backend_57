@@ -19,6 +19,10 @@ export const getTasksSchema = {
       .default("title"),
     sortOrder: Joi.string().valid("asc", "desc").default("asc"),
     priority: Joi.string().valid("low", "medium", "high"),
+    completed: Joi.boolean(),
+    minProgress: Joi.number().min(0).max(100).integer(),
+    maxProgress: Joi.number().min(0).max(100).integer(),
+    search: Joi.string().trim(),
   }),
 };
 

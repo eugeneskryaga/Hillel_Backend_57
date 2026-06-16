@@ -6,12 +6,32 @@ export const getTasksService = async ({
   sortBy = "title",
   sortOrder = "asc",
   priority,
+  completed,
+  minProgress,
+  maxProgress,
+  search,
 }) => {
   const skip = (page - 1) * perPage;
   const tasksQuery = Task.find();
 
   if (priority) {
     tasksQuery.where("priority").equals(priority);
+  }
+
+  if (completed !== undefined) {
+    tasksQuery.where("completed").equals(completed);
+  }
+
+  if (minProgress) {
+    tasksQuery.where("progress").gte(minProgress);
+  }
+
+  if (maxProgress) {
+    tasksQuery.where("progress").lte(maxProgress);
+  }
+
+  if (search) {
+    tasksQuery.where({ title: { $regex: search, $options: "i" } });
   }
 
   const [totalCount, tasks] = await Promise.all([
