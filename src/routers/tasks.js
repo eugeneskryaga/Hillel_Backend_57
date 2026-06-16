@@ -10,13 +10,14 @@ import {
 import { celebrate } from "celebrate";
 import {
   createTaskSchema,
+  getTasksSchema,
   idSchema,
   updateTaskSchema,
 } from "../validation/task.js";
 
 const router = Router();
 
-router.get("/", getTasks);
+router.get("/", celebrate(getTasksSchema), getTasks);
 router.get("/:taskId", celebrate(idSchema), getTaskById);
 router.delete("/:taskId", celebrate(idSchema), removeTask);
 router.post("/", celebrate(createTaskSchema), addTask);
