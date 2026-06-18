@@ -10,9 +10,10 @@ export const getTasksService = async ({
   minProgress,
   maxProgress,
   search,
+  authorId,
 }) => {
   const skip = (page - 1) * perPage;
-  const tasksQuery = Task.find();
+  const tasksQuery = Task.find({ authorId });
 
   if (priority) {
     tasksQuery.where("priority").equals(priority);
@@ -47,14 +48,16 @@ export const getTasksService = async ({
   return { tasks, totalCount, totalPages };
 };
 
-export const getTaskByIdService = id => Task.findById(id);
+export const getTaskByIdService = (id, authorId) =>
+  Task.findOne({ authorId, _id: id });
 
 export const addTaskService = task => Task.create(task);
 
-export const deleteTaskService = id => Task.findByIdAndDelete(id);
+export const deleteTaskService = (id, authorId) =>
+  Task.findOneAndDelete({ authorId, _id: id });
 
-export const updateTaskService = async (id, task, options) => {
-  const result = await Task.findByIdAndUpdate(id, task, {
+export const updateTaskService = async (id, authorId, task, options) => {
+  const result = await Task.findOneAndUpdate({ authorId, _id: id }, task, {
     returnDocument: "after",
     includeResultMetadata: true,
     ...options,

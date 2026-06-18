@@ -14,8 +14,11 @@ import {
   idSchema,
   updateTaskSchema,
 } from "../validation/task.js";
+import { checkToken } from "../middlewares/checkToken.js";
 
 const router = Router();
+
+router.use(checkToken);
 
 router.get("/", celebrate(getTasksSchema), getTasks);
 router.get("/:taskId", celebrate(idSchema), getTaskById);

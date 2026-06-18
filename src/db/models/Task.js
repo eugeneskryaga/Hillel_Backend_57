@@ -21,6 +21,11 @@ const taskSchema = new Schema(
       max: 100,
       default: 0,
     },
+    authorId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
   },
   { versionKey: false },
 );
