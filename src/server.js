@@ -1,6 +1,7 @@
 import express from "express";
 import authRouter from "./routers/auth.js";
 import tasksRouter from "./routers/tasks.js";
+import userRouter from "./routers/user.js";
 import cookieParser from "cookie-parser";
 import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
@@ -16,6 +17,7 @@ server.use(cookieParser());
 
 server.use("/auth", authRouter);
 server.use("/tasks", tasksRouter);
+server.use("/users", userRouter);
 
 server.use(notFoundHandler);
 

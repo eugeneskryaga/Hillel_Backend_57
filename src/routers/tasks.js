@@ -11,9 +11,9 @@ import { celebrate } from "celebrate";
 import {
   createTaskSchema,
   getTasksSchema,
-  idSchema,
   updateTaskSchema,
 } from "../validation/task.js";
+import { idSchema } from "../validation/general.js";
 import { checkToken } from "../middlewares/checkToken.js";
 
 const router = Router();
